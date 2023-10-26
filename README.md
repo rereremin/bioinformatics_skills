@@ -7,8 +7,10 @@
 ```bash
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz raw_data
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_cds_from_genomic.fna.gz
-https://figshare.com/articles/dataset/amp_res_2_fastq_zip/10006541/3?file=23769689 download there two files with reads from shotgun sequencing
 ```
+Download [there](https://figshare.com/articles/dataset/amp_res_2_fastq_zip/10006541/3?file=23769689 ) two files with reads from shotgun sequencing
+
+
 copy file from raw_data into working directory
 cp GCF_000005845.2_ASM584v2_genomic.fna.gz ..
 cp GCF_000005845.2_ASM584v2_genomic.gff.gz ..
