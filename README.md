@@ -157,6 +157,7 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
 ## Functions and roles of genes with found SNPs
 1. **ftsI**:
    - a transpeptidase required for synthesis of peptidoglycan in the division septum and is one of several proteins that localize to the septal ring
+   - responsible for antibiotic resistance
    - check more info [there](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC305773/#:~:text=FtsI%20(also%20called%20PBP3)%20of,localize%20to%20the%20septal%20ring.)
 2. **acrB**
    - the inner membrane protein
@@ -179,6 +180,10 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
  acrB
 ## Recomendations
 1) *acrB*
-Upregulation of acrAB operon occurs after acquisition of high levels of resistance to tetracycline hydrochloride and ciprofloxacin. Alternative antibiotic options (other than tetracycline hydrochloride and ciprofloxacin) should be used to avoid promoting increased expression of the acrAB operon.
-2) 
+   
+The level of regulation acrAB operon increases once the resistance levels to tetracycline hydrochloride and ciprofloxacin become high.  Alternative antibiotic options (other than tetracycline hydrochloride and ciprofloxacin) should be used to avoid promoting increased expression of the acrAB operon.
+
+2) *ftsI*
+Mutations in this gene can lead to changes in the structure of peptidoglycan and hence resistance to antibiotics that aim to destroy the cell wall. Use antibiotics that don't target peptidoglycan degradation, such as macrolides.
+
  
