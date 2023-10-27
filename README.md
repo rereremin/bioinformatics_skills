@@ -134,8 +134,8 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
 - in position 482698 missense mutation (Q -> L) in acrB
 - in position 852762 no genes
 - in position 1905761 missense mutation (G -> D) in mntP
-- in position 3535147 missense (V -> A) in envZ
-- in position 4390754 missense (A -> S) in rsgA
+- in position 3535147 missense mutation (V -> A) in envZ
+- in position 4390754 missense mutation (A -> S) in rsgA
 
 
 ## Automatic SNP annotation
@@ -276,7 +276,14 @@ T|downstream_gene_variant|MODIFIER|yjeO|b4158|transcript|b4158|protein_coding||c
 |b4166|transcript|b4166|protein_coding||c.*2174C>A|||||2174|       GT:GQ:SDP:DP:RD:AD:FREQ:PVAL:RBQ:ABQ:RDF:RDR:ADF:ADR
 
 1/1:81:16:15:0:15:100%:6,4467E-9:0:36:0:0:8:7
-```			
-		
+```
 
+## Function and role of genes with found SNPs
+1. ftsI:
+   - a transpeptidase required for synthesis of peptidoglycan in the division septum and is one of several proteins that localize to the septal ring
+   - 
+2. [acrB](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3933802/)
+   - multidrug Efflux Pump
+   - belongs to the resistance-nodulation-division
+   -  
 
