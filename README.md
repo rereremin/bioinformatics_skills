@@ -73,9 +73,43 @@ Get
 784
 25
 ```		
-				
-			
-		
+## Aligning sequences to reference
+1. Install bwa `pip install bwa`
+
+2. Index reference file (*.fna*) `bwa index GCF_000005845.2_ASM584v2_genomic.fna.gz`
+
+3. Align reads to reference, use trimmed reads
+`bwa mem GCF_000005845.2_ASM584v2_genomic.fna.gz trimmed.paired.R1.fastq.gz trimmed.paired.R2.fastq.gz > alignment.sam`
+
+4. Compress and sort SAM file
+`samtools view -S -b alignment.sam > alignment.bam`
+`samtools flagstat alignment.bam` -> `891649 + 0 mapped (99.87% : N/A)`
+
+5. Sort and index bam file, samtools version = 1.18 (latest)
+   
+`samtools sort alignment.bam -o alignment.sorted.bam`
+`samtools index alignment.sorted.bam`
+
+7. I'm working in IGV on my local computeer (MacOS)
+Convert reference genome in fasta format
+
+`gzip -dc GCF_000005845.2_ASM584v2_genomic.fna.gz > GCF_000005845.2_ASM584v2_genomic.fnagzip -dc GCF_000005845.2_ASM584v2_genomic.fna.gz > GCF_000005845.2_ASM584v2_genomic.fna` 
+
+## Variant calling
+1. Create my.mpileup
+`samtools mpileup -f GCF_000005845.2_ASM584v2_genomic.fna alignment.sorted.bam > my.mpileup`
+
+2. We need use VarScan, therefore install it using conda. 
+`conda install -c bioconda varscan`
+
+3. Move VarScan.v2.4.0.jar in our working directory.
+
+4. Create vcf-file with N = 0.2
+`java -jar VarScan.v2.4.0.jar mpileup2snp --min-var-freq 0.2 --variants --output-vcf 1 > VarScan_results.vcf`
+
+## Variant effect prediction
+
+## Automatic SNP annotation
 				
 			
 		
