@@ -105,7 +105,7 @@ Convert reference genome in fasta format
 3. Move VarScan.v2.4.0.jar in our working directory.
 
 4. Create vcf-file with N = 0.2
-`java -jar VarScan.v2.4.0.jar mpileup2snp --min-var-freq 0.2 --variants --output-vcf 1 > VarScan_results.vcf`
+`java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup --min-var-freq 0.2 --variants --output-vcf 1 > VarScan_results.vcf`
 
 ## Variant effect prediction
 
