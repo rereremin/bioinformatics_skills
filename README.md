@@ -181,9 +181,11 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
 ## Recomendations
 1) *acrB*
    
-The level of regulation acrAB operon increases once the resistance levels to tetracycline hydrochloride and ciprofloxacin become high.  Alternative antibiotic options (other than tetracycline hydrochloride and ciprofloxacin) should be used to avoid promoting increased expression of the acrAB operon.
+The level of regulation acrAB operon increases once the resistance levels to tetracycline hydrochloride and ciprofloxacin become high.  Alternative antibiotics that disrupt components of the AcrAB-TolC system (except tetracycline hydrochloride and ciprofloxacin) should be used to avoid enhancing acrAB operon expression
 
 2) *ftsI*
+   
 Mutations in this gene can lead to changes in the structure of peptidoglycan and hence resistance to antibiotics that aim to destroy the cell wall. Use antibiotics that don't target peptidoglycan degradation, such as macrolides.
 
+3) 
  
