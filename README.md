@@ -108,6 +108,14 @@ Convert reference genome in fasta format
 `java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup --min-var-freq 0.2 --variants --output-vcf 1 > VarScan_results.vcf`
 
 ## Variant effect prediction
+Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the largest scale.
+- in position 93043 missense mutation (A -> G) in ftsI
+- in position 482698 missense mutation (Q -> L) in acrB
+- in position 852762 no genes
+- in position 1905761 missense mutation (G -> D) in mntP
+- in position 3535147 missense (V -> A) in envZ
+- in position 4390754 missense (A -> S) in rsgA
+
 
 ## Automatic SNP annotation
 				
