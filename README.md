@@ -74,38 +74,59 @@ Get
 25
 ```		
 ## Aligning sequences to reference
-1. Install bwa `pip install bwa`
+1. Install bwa
+```bash
+pip install bwa
+```
+2. Index reference file (*.fna*)
+```bash
+bwa index GCF_000005845.2_ASM584v2_genomic.fna.gz
+```
 
-2. Index reference file (*.fna*) `bwa index GCF_000005845.2_ASM584v2_genomic.fna.gz`
+4. Align reads to reference, use trimmed reads
+```bash
+bwa mem GCF_000005845.2_ASM584v2_genomic.fna.gz trimmed.paired.R1.fastq.gz trimmed.paired.R2.fastq.gz > alignment.sam
+```
 
-3. Align reads to reference, use trimmed reads
-`bwa mem GCF_000005845.2_ASM584v2_genomic.fna.gz trimmed.paired.R1.fastq.gz trimmed.paired.R2.fastq.gz > alignment.sam`
+5. Compress and sort SAM file
+```bash
+samtools view -S -b alignment.sam > alignment.bam
+```
+```bash
+samtools flagstat alignment.bam
+# 891649 + 0 mapped (99.87% : N/A)
+```
 
-4. Compress and sort SAM file
-`samtools view -S -b alignment.sam > alignment.bam`
-`samtools flagstat alignment.bam` -> `891649 + 0 mapped (99.87% : N/A)`
-
-5. Sort and index bam file, samtools version = 1.18 (latest)
+6. Sort and index bam file, samtools version = 1.18 (latest)
    
-`samtools sort alignment.bam -o alignment.sorted.bam`
-`samtools index alignment.sorted.bam`
+```baash
+samtools sort alignment.bam -o alignment.sorted.bam
+samtools index alignment.sorted.bam
+```
 
-7. I'm working in IGV on my local computeer (MacOS)
+7. I'm working in IGV on my local computeer (MacOS).
 Convert reference genome in fasta format
 
-`gzip -dc GCF_000005845.2_ASM584v2_genomic.fna.gz > GCF_000005845.2_ASM584v2_genomic.fnagzip -dc GCF_000005845.2_ASM584v2_genomic.fna.gz > GCF_000005845.2_ASM584v2_genomic.fna` 
+```bash
+gzip -dc GCF_000005845.2_ASM584v2_genomic.fna.gz > GCF_000005845.2_ASM584v2_genomic.fnagzip -dc GCF_000005845.2_ASM584v2_genomic.fna.gz > GCF_000005845.2_ASM584v2_genomic.fna
+``` 
 
 ## Variant calling
 1. Create my.mpileup
-`samtools mpileup -f GCF_000005845.2_ASM584v2_genomic.fna alignment.sorted.bam > my.mpileup`
+```bash
+samtools mpileup -f GCF_000005845.2_ASM584v2_genomic.fna alignment.sorted.bam > my.mpileup
+```
 
 2. We need use VarScan, therefore install it using conda. 
-`conda install -c bioconda varscan`
-
+```bash
+conda install -c bioconda varscan
+```
 3. Move VarScan.v2.4.0.jar in our working directory.
 
 4. Create vcf-file with N = 0.2
-`java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup --min-var-freq 0.2 --variants --output-vcf 1 > VarScan_results.vcf`
+```bash
+java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup --min-var-freq 0.2 --variants --output-vcf 1 > VarScan_results.vcf
+```
 
 ## Variant effect prediction
 Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the largest scale.
@@ -119,17 +140,19 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
 
 ## Automatic SNP annotation
 1. We need a SnpEff, therefore install it using conda
-   `conda install -c bioconda snpeff`
-2. Download *GCF_000005845.2_ASM584v2_genomic.gbff.gz* and move it i working directory.
-3. Create *snpEff.config* with one line 'k12.genome : ecoli_K12'
+   ```bash
+   conda install -c bioconda snpeff
    ```
+2. Download *GCF_000005845.2_ASM584v2_genomic.gbff.gz* and move it i working directory.
+3. Create *snpEff.config* with one line 'k12.genome : ecoli_K12'. Then
+   ```bash
    mkdir -p data/k12
    gunzip GCF_000005845.2_ASM584v2_genomic.gbff.gz
    cp GCF_000005845.2_ASM584v2_genomic.gbff data/k12/genes.gbk
    snpEff build -genbank -v k12
    snpEff ann k12 VarScan_results.vcf > VarScan_results_annotated.vcf
    ```
-4. Results in file *VarScan_results_annotated.vcf*
+5. Results in file *VarScan_results_annotated.vcf*
 - ID=93043
 ```
 ADP=17;WT=0;HET=0;HOM=1;NC=0;ANN=G|missense_variant|MODERATE|ftsI|b0084|transcript|b0084|protein_coding|1/1|c.1631C>G|p.Ala544Gly|1631/176|
