@@ -172,3 +172,5 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
     - responds to the osmolarity changes in the medium by regulating the phosphorylation state of the transcription factor OmpR, which controls the expression levels of outer membrane porin proteins OmpF and OmpC
     - check more info [there](https://pubmed.ncbi.nlm.nih.gov/11973328/)
  5. **rsgA**
+    - small ribosomal subunit biogenesis GTPase
+    - check more info [there](https://www.uniprot.org/uniprotkb/P39286/entry)
