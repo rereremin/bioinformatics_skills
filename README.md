@@ -154,7 +154,7 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
    ```
 5. Results in file [VarScan_results_annotated.vcf](https://github.com/rereremin/IB/blob/project1/VarScan_results_annotated.vcf)
 
-## Function and role of genes with found SNPs
+## Functions and roles of genes with found SNPs
 1. ftsI:
    - a transpeptidase required for synthesis of peptidoglycan in the division septum and is one of several proteins that localize to the septal ring
    - check more info [there](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC305773/#:~:text=FtsI%20(also%20called%20PBP3)%20of,localize%20to%20the%20septal%20ring.)
