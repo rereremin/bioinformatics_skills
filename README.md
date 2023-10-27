@@ -55,7 +55,7 @@ conda install -c bioconda trimmomatic
    - `MINLEN:20` - drop reads below the 20 bases long
    - use Phred+33
 ```bash
-trimmomatic PE $read1 $read2 trimmed.paired.R1.fastq.gz trimmed.unpaired.R1.fastq.gz trimmed.paired.R2.fastq.gz
+trimmomatic PE amp_res_1.fastq.gz amp_res_2.fastq.gz trimmed.paired.R1.fastq.gz trimmed.unpaired.R1.fastq.gz trimmed.paired.R2.fastq.gz
 
 trimmed.unpaired.R2.fastq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:20 TRAILING:20 SLIDINGWINDOW:10:20 MINLEN:20
 ```
