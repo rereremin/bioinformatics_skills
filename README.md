@@ -152,7 +152,7 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
    snpEff build -genbank -v k12
    snpEff ann k12 VarScan_results.vcf > VarScan_results_annotated.vcf
    ```
-5. Results in file [VarScan_results_annotated.vcf]([https://github.com/rereremin/IB/blob/project1/VarScan_results_annotated.vcf](https://github.com/rereremin/IB/blob/project1/results/VarScan_results_annotated.vcf))
+5. Results in file [VarScan_results_annotated.vcf](https://github.com/rereremin/IB/blob/project1/results/VarScan_results_annotated.vcf)
 
 ## Functions and roles of genes with found SNPs
 1. **ftsI**:
