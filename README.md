@@ -159,8 +159,8 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
    - a transpeptidase required for synthesis of peptidoglycan in the division septum and is one of several proteins that localize to the septal ring
    - check more info [there](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC305773/#:~:text=FtsI%20(also%20called%20PBP3)%20of,localize%20to%20the%20septal%20ring.)
 2. **acrB**
-   - multidrug Efflux Pump
-   - belongs to the resistance-nodulation-division
+   - the inner membrane protein
+   - include in AcrAB-TolC, which belongs to the resistance-nodulation-division 
    - check more info [there](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3933802/)
 3. **mntP**
    - manganese exporter
@@ -174,3 +174,11 @@ Add two tracks (annotation in gff and vcf file) in IGV. Then find SNPs on the la
  5. **rsgA**
     - small ribosomal subunit biogenesis GTPase
     - check more info [there](https://www.uniprot.org/uniprotkb/P39286/entry)
+   
+
+ acrB
+## Recomendations
+1) *acrB*
+Upregulation of acrAB operon occurs after acquisition of high levels of resistance to tetracycline hydrochloride and ciprofloxacin. Alternative antibiotic options (other than tetracycline hydrochloride and ciprofloxacin) should be used to avoid promoting increased expression of the acrAB operon.
+2) 
+ 
