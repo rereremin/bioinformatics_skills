@@ -1,188 +1,498 @@
-### Questions
-**Find out what strains were in this season’s vaccine. Was that one of the flu strains covered by this vaccine**
+# Project 2
 
-### Creating virtual environment
-```bash			
-CONDA_SUBDIR=osx-64 conda create -n project2 python=3.9
-conda activate project2
+## Creating directories
+```python
+mkdir project2
+cd project2
+mkdir raw_data
+mkdir working_dir
 ```
-### Creating directories
-- raw_data
-- results
-### Download data
-- `wget https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR170/001/SRR1705851/SRR1705851.fastq.gz raw_data ` - data from room
-- `sequence.fasta` reference [sequence](https://www.ncbi.nlm.nih.gov/nuccore/KF848938.1?report=fasta)
-### Before start
-```bash
-fastqc -o results SRR1705851.fastq.gz 
+### Downloading raw data
+```python
+snakemake --cores=all -p roommate.fastq.gz
 ```
-trimmomatic SE
-```bash
-trimmomatic SE SRR1705851.fastq.gz roommate.fastq.gz ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:20 TRAILING:20 SLIDINGWINDOW:10:20 MINLEN:20
+Downloaded reference HA gene from [here](https://www.ncbi.nlm.nih.gov/nuccore/KF848938.1?report=fasta).
+
+### Inspecting roommate data
+Count reads in roommate sample:
+```python
+wc -l roommate.fastq
+
+# 1433060 roommate.fastq
 ```
-Index reference file 
-```bash
-bwa index reference.fasta
+Inspect reads with FastQC:
+```python
+fastqc -o . roommate.fastq
 ```
-Pipeline for alignment
-```bash
-bwa mem reference.fasta roommate.fastq| samtools view -S -b - | samtools sort -o - > roommate_sorted.bam
+### Alignment roommate's data to reference
+Create sorted bam file:
+```python
+snakemake --cores=all -p reference.roommate.sorted.bam
 ```
-Check percentage of mapped reads
-```bash
-samtools flagstat roommate_sorted.bam 
-# 359456 + 0 mapped (99.80% : N/A)
+Count aligned reads:
+```python
+samtools flagstat reference.roommate.sorted.bam
+
+# 361349 + 0 in total (QC-passed reads + QC-failed reads)
+# 358265 + 0 primary
+# 0 + 0 secondary
+# 3084 + 0 supplementary
+# 0 + 0 duplicates
+# 0 + 0 primary duplicates
+# 361116 + 0 mapped (99.94% : N/A)
+# 358032 + 0 primary mapped (99.93% : N/A)
+# 0 + 0 paired in sequencing
+# 0 + 0 read1
+# 0 + 0 read2
+# 0 + 0 properly paired (N/A : N/A)
+# 0 + 0 with itself and mate mapped
+# 0 + 0 singletons (N/A : N/A)
+# 0 + 0 with mate mapped to a different chr
+# 0 + 0 with mate mapped to a different chr (mapQ>=5)
 ```
-### Look common variants with VarScan
-Index bam file
-```bash
-samtools index roommate_sorted.bam
-```
-#### Count length reference, amount of reads and average read length:
-1) Length reference: 
-```bash
+### Looking for common variants with VarScan
+
+Compute reference length:
+```python
 cat reference.fasta | grep -v '^>' | wc -m
 # 1690
 ```
-2) Amount of reads:
-```bash
+Compute number of reads:
+```python
 awk '{s++}END{print s/4}' roommate.fastq
 # 357171
-```   
-3) Average read length:
-```bash
+```
+Compute average read length:
+```python
 awk '{if(NR%4==2) {count++; bases += length} } END{print bases/count}' roommate.fastq
 # 145.042
 ```
-
-Create my.mpileup and use -d flag to increase depth to 50000
-```bash
-samtools mpileup -d 50000 -f reference.fasta roommate_sorted.bam > my.mpileup
+Create my.mpileup and use -d flag to increase depth to 60000
+```python
+samtools mpileup -d 60000 -f reference.fasta reference.roommate.sorted.bam > my.mpileup
 ```
-VarScan
-```bash
-java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup --min-var-freq 0.95 --variants --output-vcf 1 > VarScan_results.vcf
+Run VarScan with N = 0.95
+```python
+varscan mpileup2snp my.mpileup --min-var-freq 0.95 --variants --output-vcf 1 > VarScan_results_0_95.vcf
+
+# Only SNPs will be reported
+# Warning: No p-value threshold provided, so p-values will not be calculated
+# Min coverage:	8
+# Min reads2:	2
+# Min var freq:	0.95
+# Min avg qual:	15
+# P-value thresh:	0.01
+# Reading input from my.mpileup
+# 1665 bases in pileup file
+# 5 variant positions (5 SNP, 0 indel)
+# 0 were failed by the strand-filter
+# 5 variant positions reported (5 SNP, 0 indel)
 ```
 5 variants are reported back:
-```bash
-cat VarScan_results.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5}' > SNP.txt
+```python
+cat VarScan_results_0_95.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5}'
+
 # KF848938.1 72 . A G
 # KF848938.1 117 . C T
 # KF848938.1 774 . T C
 # KF848938.1 999 . C T
 # KF848938.1 1260 . A C
 ```
-What do these mutations do?
-- KF848938.1 72 A G: T > T (silent), Q > R (missense), N > D (missense)
-- KF848938.1 117 C T: A > A (silent), P > L (missense), H > Y (missense)
--  KF848938.1 774 T C: F > F (silent), L > S (missense), STOP > Q (nonsense)
--  KF848938.1 999 C T: G > G (silent), A > V (missense), R > C (missence)
--  KF848938.1 1260 A C: L  > L (silent) , Y > S (missense), M > Q(missemce)
-  
-**Could they be what allowed your roommate’s virus to escape the antibodies in your body from the flu vaccine?**
-**HOW???**
+KF848938.1 72 A -> G, Thr -> Thr, synonymous 
 
-### Look for rare variants with VarScan
-Set the minimum variant frequency to 0.001
-```bash
-java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup --min-var-freq 0.001 --variants --output-vcf 1 > VarScan_results.vcf
-```
-Create file with all variants, which reported back (21 SNP).
-```bash
-cat VarScan_results.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5, $10}' > SNP2.txt
+KF848938.1 117 C -> T, Ala -> Ala, synonymous
 
-# KF848938.1 72 . A G 1/1:255:16748:16705:6:16698:99,96%:0E0:35:36:4:2:10841:5857
-# KF848938.1 117 . C T 1/1:255:20641:20559:36:20523:99,82%:0E0:35:37:27:9:13352:7171
-# KF848938.1 276 . A G 0/1:23:36445:36407:36335:63:0,17%:4,2944E-3:37:35:22237:14098:30:33
-# KF848938.1 307 . C T 0/1:255:37025:36919:36567:346:0,94%:2,5986E-65:36:35:22110:14457:180:166
-# KF848938.1 340 . T C 0/1:21:37344:37188:37120:62:0,17%:7,6822E-3:37:36:22942:14178:38:24
-# KF848938.1 389 . T C 0/1:38:31716:31542:31470:68:0,22%:1,2628E-4:37:37:15911:15559:43:25
-# KF848938.1 691 . A G 0/1:25:39006:38858:38784:67:0,17%:2,9912E-3:37:34:20977:17807:23:44
-# KF848938.1 722 . A G 0/1:38:37614:37570:37489:76:0,2%:1,5322E-4:37:36:20700:16789:39:37
-# KF848938.1 744 . A G 0/1:24:37988:37936:37863:65:0,17%:3,5838E-3:37:33:20555:17308:35:30
-# KF848938.1 774 . T C 1/1:255:37964:37792:7:37781:99,97%:0E0:32:38:7:0:19560:18221
-# KF848938.1 802 . A G 0/1:59:43606:43498:43395:100:0,23%:1,0306E-6:37:35:20200:23195:32:68
-# KF848938.1 859 . A G 0/1:24:35543:35390:35326:62:0,18%:3,9585E-3:37:37:14363:20963:27:35
-# KF848938.1 915 . T C 0/1:28:36629:36556:36482:67:0,18%:1,4547E-3:35:35:17836:18646:37:30
-# KF848938.1 999 . C T 1/1:255:32106:31682:37:31642:99,87%:0E0:36:36:20:17:16936:14706
-# KF848938.1 1043 . A G 0/1:24:31188:31147:31088:57:0,18%:3,6512E-3:36:33:17051:14037:19:38
-# KF848938.1 1086 . A G 0/1:32:24946:24946:24892:53:0,21%:6,2624E-4:36:35:12474:12418:21:32
-# KF848938.1 1213 . A G 0/1:36:24884:24813:24755:56:0,23%:2,2342E-4:37:36:8797:15958:24:32
-# KF848938.1 1260 . A C 1/1:255:22785:22754:2:22740:99,94%:0E0:32:37:0:2:9694:13046
-# KF848938.1 1280 . T C 0/1:20:23206:23187:23143:43:0,19%:9,2871E-3:37:35:10997:12146:24:19
-# KF848938.1 1458 . T C 0/1:255:26811:26710:26486:221:0,83%:3,6055E-40:37:35:6795:19691:79:142
-# KF848938.1 1460 . A G 0/1:20:26715:26695:26643:47:0,18%:9,269E-3:36:35:6901:19742:9:38
+KF848938.1 774 T -> C, Phe -> Phe, synonymous
+
+KF848938.1 999 C -> T, Gly -> Gly, synonymous
+
+KF848938.1 1260 A -> C, Leu -> Leu, synonymous
+
+These mutations do not contribute to the infection.
+
+### Looking for rare proteins with VarScan
+
+Run VarScan with N = 0.001
+```python
+varscan mpileup2snp my.mpileup --min-var-freq 0.001 --variants --output-vcf 1 > VarScan_results_0_001.vcf
+
+# Scan_results_0_001.vcf
+# Only SNPs will be reported
+# Warning: No p-value threshold provided, so p-values will not be calculated
+# Min coverage:	8
+# Min reads2:	2
+# Min var freq:	0.001
+# Min avg qual:	15
+# P-value thresh:	0.01
+# Reading input from my.mpileup
+# 1665 bases in pileup file
+# 23 variant positions (21 SNP, 2 indel)
+# 0 were failed by the strand-filter
+# 21 variant positions reported (21 SNP, 0 indel)
+```
+21 variants are reported back:
+```python
+cat VarScan_results_0_95.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5}'
+
+# KF848938.1 72 . A G
+# KF848938.1 117 . C T
+# KF848938.1 254 . A G
+# KF848938.1 276 . A G
+# KF848938.1 307 . C T
+# KF848938.1 340 . T C
+# KF848938.1 389 . T C
+# KF848938.1 691 . A G
+# KF848938.1 722 . A G
+# KF848938.1 744 . A G
+# KF848938.1 774 . T C
+# KF848938.1 802 . A G
+# KF848938.1 859 . A G
+# KF848938.1 915 . T C
+# KF848938.1 999 . C T
+# KF848938.1 1043 . A G
+# KF848938.1 1086 . A G
+# KF848938.1 1213 . A G
+# KF848938.1 1260 . A C
+# KF848938.1 1280 . T C
+# KF848938.1 1458 . T C
+```
+### Inspecting control data sets
+
+```python
+snakemake --cores=all -p control1.fastq
+snakemake --cores=all -p control2.fastq
+snakemake --cores=all -p control3.fastq
+```
+```python
+wc -l control1.fastq
+wc -l control2.fastq
+wc -l control3.fastq
+
+# 1026344 control1.fastq
+# 933308 control2.fastq
+# 999856 control3.fastq
+```
+Inspect reads with FastQC:
+```python
+fastqc -o . control1.fastq
+fastqc -o . control2.fastq
+fastqc -o . control3.fastq
+```
+Create sorted bam files:
+```python
+snakemake --cores=all -p reference.control1.sorted.bam
+snakemake --cores=all -p reference.control2.sorted.bam
+snakemake --cores=all -p reference.control3.sorted.bam
+```
+Count aligned reads:
+```python
+samtools flagstat reference.control1.sorted.bam
+
+# 256744 + 0 in total (QC-passed reads + QC-failed reads)
+# 256586 + 0 primary
+# 0 + 0 secondary
+# 158 + 0 supplementary
+# 0 + 0 duplicates
+# 0 + 0 primary duplicates
+# 256658 + 0 mapped (99.97% : N/A)
+# 256500 + 0 primary mapped (99.97% : N/A)
+# 0 + 0 paired in sequencing
+# 0 + 0 read1
+# 0 + 0 read2
+# 0 + 0 properly paired (N/A : N/A)
+# 0 + 0 with itself and mate mapped
+# 0 + 0 singletons (N/A : N/A)
+# 0 + 0 with mate mapped to a different chr
+# 0 + 0 with mate mapped to a different chr (mapQ>=5)
+```
+```python
+samtools flagstat reference.control2.sorted.bam
+
+# 233451 + 0 in total (QC-passed reads + QC-failed reads)
+# 233327 + 0 primary
+# 0 + 0 secondary
+# 124 + 0 supplementary
+# 0 + 0 duplicates
+# 0 + 0 primary duplicates
+# 233375 + 0 mapped (99.97% : N/A)
+# 233251 + 0 primary mapped (99.97% : N/A)
+# 0 + 0 paired in sequencing
+# 0 + 0 read1
+# 0 + 0 read2
+# 0 + 0 properly paired (N/A : N/A)
+# 0 + 0 with itself and mate mapped
+# 0 + 0 singletons (N/A : N/A)
+# 0 + 0 with mate mapped to a different chr
+# 0 + 0 with mate mapped to a different chr (mapQ>=5)
+```
+```python
+samtools flagstat reference.control3.sorted.bam
+
+# 250184 + 0 in total (QC-passed reads + QC-failed reads)
+# 249964 + 0 primary
+# 0 + 0 secondary
+# 220 + 0 supplementary
+# 0 + 0 duplicates
+# 0 + 0 primary duplicates
+# 250108 + 0 mapped (99.97% : N/A)
+# 249888 + 0 primary mapped (99.97% : N/A)
+# 0 + 0 paired in sequencing
+# 0 + 0 read1
+# 0 + 0 read2
+# 0 + 0 properly paired (N/A : N/A)
+# 0 + 0 with itself and mate mapped
+# 0 + 0 singletons (N/A : N/A)
+# 0 + 0 with mate mapped to a different chr
+# 0 + 0 with mate mapped to a different chr (mapQ>=5)
 ```
 
-###  Inspect and align the control sample sequencing data
-Download control files:
-```bash
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR170/008/SRR1705858/SRR1705858.fastq.gz raw_data
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR170/009/SRR1705859/SRR1705859.fastq.gz raw_data
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR170/009/SRR1705859/SRR1705860.fastq.gz raw_data
-```
-Unzip and rename files into control1.fastq, control2.fastq, control3.fastq
+### Looking for rare variants in control files
 
-Count reads in control1.fastq, control2.fastq, control3.fastq:
-```bash
-awk '{s++}END{print s/4}' control1.fastq
-# 256586
-
-awk '{s++}END{print s/4}' control2.fastq
-# 233327
-
-awk '{s++}END{print s/4}' control3.fastq
-# 249964
-```
-We need calculate average read length in each file and after calculate rough coverage estimate using formula:
-
-*coverage = (read count * read length ) / total genome size*
-```bash
-awk '{if(NR%4==2) {count++; bases += length} } END{print bases/count}' control1.fastq
-# 148.561
-
-awk '{if(NR%4==2) {count++; bases += length} } END{print bases/count}' control2.fastq
-# 148.446
-
-awk '{if(NR%4==2) {count++; bases += length} } END{print bases/count}' control3.fastq
-# 148.703
-```
-```
-coverage_1 = 256586 * 148.561 / 1690 = 22555
-
-coverage_2 = 233327 * 148.446 / 1690 = 20494
-
-coverage_3 = 249964 * 148.703 / 1690 = 21994
-```
-Align each control fastq file to the reference:
-```bash
-bwa mem reference.fasta control1.fastq | samtools view -S -b - | samtools sort -o - > control1_sorted.bam
-bwa mem reference.fasta control2.fastq | samtools view -S -b - | samtools sort -o - > control2_sorted.bam
-bwa mem reference.fasta control3.fastq | samtools view -S -b - | samtools sort -o - > control3_sorted.bam
+Create my.mpileup files and use -d flag to increase depth to 60000
+```python
+samtools mpileup -d 60000 -f reference.fasta reference.control1.sorted.bam > my.mpileup1
+samtools mpileup -d 60000 -f reference.fasta reference.control2.sorted.bam > my.mpileup2
+samtools mpileup -d 60000 -f reference.fasta reference.control3.sorted.bam > my.mpileup3
 ```
 
-Use samtools to index each of the new control alignment (bam) files
-```bash
-samtools index control1_sorted.bam
-samtools index control2_sorted.bam
-samtools index control3_sorted.bam
+Run VarScan with N = 0.001
+```python
+varscan mpileup2snp my.mpileup1 --min-var-freq 0.001 --variants --output-vcf 1 > VarScan_results_0_001_1.vcf
+# Only SNPs will be reported
+# Warning: No p-value threshold provided, so p-values will not be calculated
+# Min coverage:	8
+# Min reads2:	2
+# Min var freq:	0.001
+# Min avg qual:	15
+# P-value thresh:	0.01
+# Reading input from my.mpileup1
+# 1665 bases in pileup file
+# 58 variant positions (58 SNP, 0 indel)
+# 1 were failed by the strand-filter
+# 57 variant positions reported (57 SNP, 0 indel)
 ```
-###  Use VarScan to look for rare variants in the reference files.
-Use mpileup to create files 
-```bash
-samtools mpileup -d 50000 -f reference.fasta control1_sorted.bam > my.mpileup1
-samtools mpileup -d 50000 -f reference.fasta control2_sorted.bam > my.mpileup2
-samtools mpileup -d 50000 -f reference.fasta control3_sorted.bam > my.mpileup3
+57 variants are reported back:
+```python
+cat VarScan_results_0_001_1.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5}'
+# KF848938.1 38 . T C
+# KF848938.1 54 . T C
+# KF848938.1 72 . A G
+# KF848938.1 95 . A G
+# KF848938.1 117 . C T
+# KF848938.1 165 . T C
+# KF848938.1 183 . A G
+# KF848938.1 216 . A G
+# KF848938.1 218 . A G
+# KF848938.1 222 . T C
+# KF848938.1 235 . T C
+# KF848938.1 254 . A G
+# KF848938.1 276 . A G
+# KF848938.1 297 . T C
+# KF848938.1 328 . T C
+# KF848938.1 340 . T C
+# KF848938.1 356 . A G
+# KF848938.1 370 . A G
+# KF848938.1 389 . T C
+# KF848938.1 409 . T C
+# KF848938.1 414 . T C
+# KF848938.1 421 . A G
+# KF848938.1 426 . A G
+# KF848938.1 463 . A G
+# KF848938.1 516 . A G
+# KF848938.1 566 . A G
+# KF848938.1 595 . G T
+# KF848938.1 597 . A G
+# KF848938.1 660 . A G
+# KF848938.1 670 . A G
+# KF848938.1 691 . A G
+# KF848938.1 722 . A G
+# KF848938.1 744 . A G
+# KF848938.1 774 . T C
+# KF848938.1 859 . A G
+# KF848938.1 915 . T C
+# KF848938.1 987 . A G
+# KF848938.1 1008 . T G
+# KF848938.1 1031 . A G
+# KF848938.1 1043 . A G
+# KF848938.1 1056 . T C
+# KF848938.1 1086 . A G
+# KF848938.1 1089 . A G
+# KF848938.1 1213 . A G
+# KF848938.1 1260 . A C
+# KF848938.1 1264 . T C
+# KF848938.1 1280 . T C
+# KF848938.1 1281 . T C
+# KF848938.1 1286 . T C
+# KF848938.1 1339 . T C
+# KF848938.1 1358 . A G
+# KF848938.1 1398 . T C
+# KF848938.1 1421 . A G
+# KF848938.1 1460 . A G
+# KF848938.1 1482 . A G
+# KF848938.1 1580 . T C
+# KF848938.1 1591 . T C
 ```
-Create vcf files
-```bash
-java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup1 --min-var-freq 0.001 --variants --output-vcf 1 > VarScan_results_1.vcf
-java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup2 --min-var-freq 0.001 --variants --output-vcf 1 > VarScan_results_2.vcf
-java -jar VarScan.v2.4.0.jar mpileup2snp my.mpileup3 --min-var-freq 0.001 --variants --output-vcf 1 > VarScan_results_3.vcf
+```python
+varscan mpileup2snp my.mpileup2 --min-var-freq 0.001 --variants --output-vcf 1 > VarScan_results_0_001_2.vcf
+# Only SNPs will be reported
+# Warning: No p-value threshold provided, so p-values will not be calculated
+# Min coverage:	8
+# Min reads2:	2
+# Min var freq:	0.001
+# Min avg qual:	15
+# P-value thresh:	0.01
+# Reading input from my.mpileup2
+# 1665 bases in pileup file
+# 54 variant positions (54 SNP, 0 indel)
+# 2 were failed by the strand-filter
+# 52 variant positions reported (52 SNP, 0 indel)
 ```
-Parse vcf files:
-```bash
-cat VarScan_results_1.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5, $10}' > VS1.txt
-cat VarScan_results_2.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5, $10}' > VS2.txt
-cat VarScan_results_3.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5, $10}' > VS3.txt
+52 variants are reported back:
+```python
+cat VarScan_results_0_001_2.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5}'
+# KF848938.1 44 . T C
+# KF848938.1 158 . A G
+# KF848938.1 165 . T C
+# KF848938.1 183 . A G
+# KF848938.1 193 . A G
+# KF848938.1 216 . A G
+# KF848938.1 218 . A G
+# KF848938.1 222 . T C
+# KF848938.1 254 . A G
+# KF848938.1 276 . A G
+# KF848938.1 319 . T C
+# KF848938.1 340 . T C
+# KF848938.1 356 . A G
+# KF848938.1 370 . A G
+# KF848938.1 398 . A G
+# KF848938.1 403 . A G
+# KF848938.1 409 . T C
+# KF848938.1 414 . T C
+# KF848938.1 421 . A G
+# KF848938.1 463 . A G
+# KF848938.1 499 . A G
+# KF848938.1 516 . A G
+# KF848938.1 548 . A G
+# KF848938.1 591 . A G
+# KF848938.1 607 . A G
+# KF848938.1 660 . A G
+# KF848938.1 670 . A G
+# KF848938.1 691 . A G
+# KF848938.1 722 . A G
+# KF848938.1 744 . A G
+# KF848938.1 793 . A G
+# KF848938.1 859 . A G
+# KF848938.1 898 . A G
+# KF848938.1 915 . T C
+# KF848938.1 987 . A G
+# KF848938.1 1031 . A G
+# KF848938.1 1056 . T C
+# KF848938.1 1086 . A G
+# KF848938.1 1100 . T C
+# KF848938.1 1213 . A G
+# KF848938.1 1264 . T C
+# KF848938.1 1280 . T C
+# KF848938.1 1358 . A G
+# KF848938.1 1366 . A G
+# KF848938.1 1398 . T C
+# KF848938.1 1421 . A G
+# KF848938.1 1460 . A G
+# KF848938.1 1482 . A G
+# KF848938.1 1517 . A G
+# KF848938.1 1520 . T C
+# KF848938.1 1600 . T C
+# KF848938.1 1604 . T C
 ```
+```python
+varscan mpileup2snp my.mpileup3 --min-var-freq 0.001 --variants --output-vcf 1 > VarScan_results_0_001_3.vcf
+# Only SNPs will be reported
+# Warning: No p-value threshold provided, so p-values will not be calculated
+# Min coverage:	8
+# Min reads2:	2
+# Min var freq:	0.001
+# Min avg qual:	15
+# P-value thresh:	0.01
+# Reading input from my.mpileup3
+# 1665 bases in pileup file
+# 61 variant positions (61 SNP, 0 indel)
+# 0 were failed by the strand-filter
+# 61 variant positions reported (61 SNP, 0 indel)
+```
+61 variants are reported back:
+```python
+cat VarScan_results_0_001_3.vcf | awk 'NR>24 {print $1, $2, $3, $4, $5}'
+# KF848938.1 38 . T C
+# KF848938.1 44 . T C
+# KF848938.1 95 . A G
+# KF848938.1 105 . A G
+# KF848938.1 133 . A G
+# KF848938.1 158 . A G
+# KF848938.1 165 . T C
+# KF848938.1 183 . A G
+# KF848938.1 199 . A G
+# KF848938.1 216 . A G
+# KF848938.1 218 . A G
+# KF848938.1 222 . T C
+# KF848938.1 228 . T C
+# KF848938.1 230 . A G
+# KF848938.1 235 . T C
+# KF848938.1 254 . A G
+# KF848938.1 271 . A G
+# KF848938.1 276 . A G
+# KF848938.1 297 . T C
+# KF848938.1 319 . T C
+# KF848938.1 340 . T C
+# KF848938.1 356 . A G
+# KF848938.1 370 . A G
+# KF848938.1 389 . T C
+# KF848938.1 409 . T C
+# KF848938.1 414 . T C
+# KF848938.1 421 . A G
+# KF848938.1 463 . A G
+# KF848938.1 499 . A G
+# KF848938.1 566 . A G
+# KF848938.1 597 . A G
+# KF848938.1 607 . A G
+# KF848938.1 660 . A G
+# KF848938.1 670 . A G
+# KF848938.1 691 . A G
+# KF848938.1 722 . A G
+# KF848938.1 744 . A G
+# KF848938.1 759 . T C
+# KF848938.1 859 . A G
+# KF848938.1 915 . T C
+# KF848938.1 987 . A G
+# KF848938.1 1031 . A G
+# KF848938.1 1043 . A G
+# KF848938.1 1056 . T C
+# KF848938.1 1086 . A G
+# KF848938.1 1089 . A G
+# KF848938.1 1105 . A G
+# KF848938.1 1209 . A G
+# KF848938.1 1213 . A G
+# KF848938.1 1264 . T C
+# KF848938.1 1280 . T C
+# KF848938.1 1281 . T C
+# KF848938.1 1301 . A G
+# KF848938.1 1358 . A G
+# KF848938.1 1366 . A G
+# KF848938.1 1398 . T C
+# KF848938.1 1421 . A G
+# KF848938.1 1460 . A G
+# KF848938.1 1482 . A G
+# KF848938.1 1580 . T C
+# KF848938.1 1604 . T C
+```
+Parse vcf files into txt files:
+```python
+bcftools query -f '%POS %REF %ALT [ %FREQ]' VarScan_results_0_001.vcf > frequencies.txt
+bcftools query -f '%POS %REF %ALT [ %FREQ]' VarScan_results_0_001_1.vcf > frequencies1.txt
+bcftools query -f '%POS %REF %ALT [ %FREQ]' VarScan_results_0_001_2.vcf > frequencies2.txt
+bcftools query -f '%POS %REF %ALT [ %FREQ]' VarScan_results_0_001_3.vcf > frequencies3.txt
+```
+Merge these files into one csv file.
+Compute mean and standard deviation of frequencies for control samples. 
+SNPs with frequencies > 0.5%:
+
+307 C T Pro103Ser - D epitope region
+1458 T C Tyr486Tyr
