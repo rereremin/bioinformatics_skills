@@ -17,3 +17,5 @@ fastqc -o fastqc_results SRR292770_R1.fastq.gz SRR292770_R2.fastq.gz
 fastqc -o fastqc_results SRR292862_R1.fastq.gz SRR292862_R2.fastq.gz
 ```
 You can see FastQC results [there](https://github.com/rereremin/IB/tree/project3/fastqc_results).
+Number of reads in each file:
+- 
