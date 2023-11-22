@@ -10,7 +10,7 @@ Downloading 6 files:
 - SRR292862_R1.fastq.gz
 - SRR292862_R2.fastq.gz
 
-Run FastQC for these files:
+Create new directory `fastqc_results` and run FastQC for these six files:
 ```bash
 fastqc -o fastqc_results SRR292678_R1.fastq.gz SRR292678_R2.fastq.gz
 fastqc -o fastqc_results SRR292770_R1.fastq.gz SRR292770_R2.fastq.gz
