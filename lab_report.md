@@ -25,7 +25,7 @@ Number of reads in each file:
 - in SRR292862_R1.fastq.gz **5102041** reads
 - in SRR292862_R2.fastq.gz **5102041** reads
 
-### K-mer profile and genome size estimation
+### K-mer profile and genome size estimation (ПЕРЕСЧИТАТЬ)
 
 Install jellyfish:
 ```bash
@@ -57,4 +57,6 @@ I have some problems with SPAdes, therefore download [precomputed results](https
 Unzip precomputed results.
 Than use online version of QUAST to get [contig's and scaffold's reports]()
 
+### Impact of reads with large insert size
+Download [precomputed results](https://disk.yandex.ru/d/XHCbTIrvxzN5Y) and unzip like in previous paragraph.
 
