@@ -53,7 +53,8 @@ L (average read length) = 135.041
 **Genome_size = 346400**
 
 ### Assembling E. coli X genome from paired reads
-
-
+I have some problems with SPAdes, therefore download [precomputed results](https://disk.yandex.ru/d/4xEI_7gdxzN2D).
+Unzip precomputed results.
+Than use online version of QUAST to get [contig's and scaffold's reports]()
 
 
