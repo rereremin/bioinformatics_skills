@@ -73,4 +73,8 @@ barrnap rrna.gff --outseq rRNA.fna
 ```
 After that we use “Nucleotide blast” to find a reference genome `Escherichia coli 55989, complete sequence` and save as `55989.fasta` [here](https://github.com/rereremin/IB/tree/project3/prokka).
 
+### Visualisation with Mauve
+Add `55989.fasta` and `scaffolds.gbk` and find Shigo toxins type genes.
+- stxB (Shiga toxin subunit B precursor)
+- stxA (Shiga toxin subunit A precursor)
 
