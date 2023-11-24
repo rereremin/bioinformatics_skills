@@ -78,3 +78,24 @@ Add `55989.fasta` and `scaffolds.gbk` and find Shigo toxins type genes.
 - stxB (Shiga toxin subunit B precursor)
 - stxA (Shiga toxin subunit A precursor)
 
+### Antibiotic resistance detection
+#### E.coli X
+- streptomycin
+- amoxicillin
+- ampicillin
+- cefepime
+- cefotaxime
+- ceftazidime
+- piperacillin
+- aztreonam
+- ticarcillin
+- ceftriaxone
+- cephalothin
+- sulfamethoxazole
+- trimethoprim
+- tetracycline
+- doxycycline
+#### reference genome
+- tetracycline
+- doxycycline
+- minocycline
