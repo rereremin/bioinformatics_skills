@@ -1,6 +1,6 @@
 # Lab report
 ## E. coli outbreak investigation, De novo assembly and annotation of bacterial genomes
-
+Create conda venv.
 ### Exploring the dataset
 Downloading 6 files:
 - SRR292678_R1.fastq.gz
@@ -79,7 +79,8 @@ Add `55989.fasta` and `scaffolds.gbk` and find Shigo toxins type genes.
 - stxA (Shiga toxin subunit A precursor)
 
 ### Tracing the source of toxin genes 
-
+Shiga toxin geens are stxA, stxB.
+These geens are flanked by wrbA, agp, cbpA, cbpM, tor-genes (D, A, C, R, T, S) on the one side and rut-genes (G, F, E, D, C, B_2, A) on the other.
 
 ### Antibiotic resistance detection
 #### E.coli X
@@ -104,4 +105,6 @@ Add `55989.fasta` and `scaffolds.gbk` and find Shigo toxins type genes.
 - minocycline
 
 ### Antibiotic resistance mechanism
-Genes, which responsible for antiobiotic resistance to β-lactam antibiotics are **bla_1** and **bla_2**
+Genes, which responsible for antiobiotic resistance to β-lactam antibiotics are **bla_1** and **bla_2**.
+These genes are flanking by tnpA, luc-genes (A, B, C, D) and lutA on the one side and mobA, mobB, thrB_2, dsbA on the other. 
+
