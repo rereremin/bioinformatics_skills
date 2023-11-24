@@ -38,19 +38,18 @@ Than make a histogram, which is [here](https://github.com/rereremin/IB/tree/proj
 jellyfish count -m 31 -s 100M -t 10 -C <(gzcat SRR292678_R1.fastq.gz) <(gzcat SRR292678_R2.fastq.gz)
 jellyfish histo -t 10 mer_counts.jf > SRR292678.histo
 ```
-Estimate the genome size using the formula: `Genome_size = T / N`.
+Estimate the genome. Write script on R:
+```R
+data <- read.table("SRR292678.histo")
+plot(data[8:600,],type="l")
+points(data[1300:1500,])
 
-T (Total bases) = 55666752
+m <- which(data$V2 == max(data[13:1569,]$V2))
 
-`N = (M * L) / (L - K + 1)`, depth of coverage
-
-M (kmer peak) = 125
-
-K (kmer size) = 31
-
-L (average read length) = 135.041
-
-**Genome_size = 346400**
+genome_size <- sum(as.numeric(data[2:1569,1]*data[2:1569,2]))/m
+# genome_size = 5168217
+```
+**Genome sie = 5168217**
 
 ### Assembling E. coli X genome from paired reads
 I have some problems with SPAdes, therefore download [precomputed results](https://disk.yandex.ru/d/4xEI_7gdxzN2D).
