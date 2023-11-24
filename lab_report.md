@@ -55,8 +55,19 @@ L (average read length) = 135.041
 ### Assembling E. coli X genome from paired reads
 I have some problems with SPAdes, therefore download [precomputed results](https://disk.yandex.ru/d/4xEI_7gdxzN2D).
 Unzip precomputed results.
-Than use online version of QUAST to get [contig's and scaffold's reports]()
+Than use online version of QUAST to get [contig's and scaffold's reports](https://github.com/rereremin/IB/tree/project3/quast_results)
 
 ### Impact of reads with large insert size
-Download [precomputed results](https://disk.yandex.ru/d/XHCbTIrvxzN5Y) and unzip like in previous paragraph.
+Download [precomputed results](https://disk.yandex.ru/d/XHCbTIrvxzN5Y) and unzip like in previous paragraph. 
+[Results there](https://github.com/rereremin/IB/tree/project3/quast_results).
+
+### Genome Annotation
+Download results [here](https://disk.yandex.ru/d/4ZzBdc2IxzZUb) and unzip it. PROKKA results are [here](https://github.com/rereremin/IB/tree/project3/prokka)
+
+### Finding the closest relative of E. coli X
+Install Barnapp: 
+```bash 
+conda install -c bioconda -c conda-forge barrnap
+```
+
 
