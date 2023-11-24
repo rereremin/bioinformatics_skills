@@ -78,6 +78,9 @@ Add `55989.fasta` and `scaffolds.gbk` and find Shigo toxins type genes.
 - stxB (Shiga toxin subunit B precursor)
 - stxA (Shiga toxin subunit A precursor)
 
+### Tracing the source of toxin genes 
+
+
 ### Antibiotic resistance detection
 #### E.coli X
 - streptomycin
@@ -99,3 +102,6 @@ Add `55989.fasta` and `scaffolds.gbk` and find Shigo toxins type genes.
 - tetracycline
 - doxycycline
 - minocycline
+
+### Antibiotic resistance mechanism
+Genes, which responsible for antiobiotic resistance to β-lactam antibiotics are **bla_1** and **bla_2**
