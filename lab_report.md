@@ -65,9 +65,12 @@ Download [precomputed results](https://disk.yandex.ru/d/XHCbTIrvxzN5Y) and unzip
 Download results [here](https://disk.yandex.ru/d/4ZzBdc2IxzZUb) and unzip it. PROKKA results are [here](https://github.com/rereremin/IB/tree/project3/prokka)
 
 ### Finding the closest relative of E. coli X
-Install Barnapp: 
+Install Barnapp. Than find rRNA and after that make a `16S.fna` [file](https://github.com/rereremin/IB/tree/project3/prokka). 
 ```bash 
 conda install -c bioconda -c conda-forge barrnap
+barrnap --kingdom bac scaffolds.fasta 1> rrna.gff 2> rrna.log
+barrnap rrna.gff --outseq rRNA.fna 
 ```
+After that we use “Nucleotide blast” to find a reference genome `Escherichia coli 55989, complete sequence` and save as `55989.fasta` [here](https://github.com/rereremin/IB/tree/project3/prokka).
 
 
