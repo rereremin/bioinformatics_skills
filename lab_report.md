@@ -60,6 +60,14 @@ Than use online version of QUAST to get [contig's and scaffold's reports](https:
 Download [precomputed results](https://disk.yandex.ru/d/XHCbTIrvxzN5Y) and unzip like in previous paragraph. 
 [Results there](https://github.com/rereremin/IB/tree/project3/quast_results).
 
+Main metrics for single library assembly:
+- N50 = 111860
+- number of contigs = 210
+
+Main metrics for three-library assembly:
+- N50 = 335515
+- number of contigs = 105
+
 ### Genome Annotation
 Download results [here](https://disk.yandex.ru/d/4ZzBdc2IxzZUb) and unzip it. PROKKA results are [here](https://github.com/rereremin/IB/tree/project3/prokka)
 
