@@ -86,7 +86,7 @@ Add `55989.fasta` and `scaffolds.gbk` and find Shigo toxins type genes.
 - stxA (Shiga toxin subunit A precursor)
 
 ### Tracing the source of toxin genes 
-Shiga toxin geens are stxA, stxB.
+Shiga toxin geens are **stxA**, **stxB**
 stxA, stxB are flanked on the 5'-end by 
 - Phage DNA adenine methylase
 - Phage antitermination protein Q
@@ -128,5 +128,21 @@ stxA, stxB are flanked on the 3'-end by:
 
 ### Antibiotic resistance mechanism
 Genes, which responsible for antiobiotic resistance to β-lactam antibiotics are **bla_1** and **bla_2**.
-These genes are flanking by tnpA, luc-genes (A, B, C, D) and lutA on the one side and mobA, mobB, thrB_2, dsbA on the other. 
+bla_1, bla_2 are flanked on the 5'-end by:
+- Mobile element protein
+bla_1, bla_2 are flanked on the 3'-end by:
+- Tryptophan syntase
+- Mobile element protein
 
+Also find Class C beta-lactamase gene and Class A beta-lactamase.
+
+Class C beta-lactamase gene is flanked on the 5'-end by:
+- Small multidrug resistance (SMR) efflux transporter
+Class C beta-lactamase gene is flanked on the 3'-end by:
+- Fumarate-reductase group genes
+
+Class A beta-lactamase gene is flanked on the 5'-end by:
+- error-prone genes
+Class A beta-lactamase gene is flanked on the 3'-end by:
+- mobile element protein
+  
