@@ -87,7 +87,22 @@ Add `55989.fasta` and `scaffolds.gbk` and find Shigo toxins type genes.
 
 ### Tracing the source of toxin genes 
 Shiga toxin geens are stxA, stxB.
-These geens are flanked by wrbA, agp, cbpA, cbpM, tor-genes (D, A, C, R, T, S) on the one side and rut-genes (G, F, E, D, C, B_2, A) on the other.
+stxA, stxB are flanked on the 5'-end by 
+- Phage DNA adenine methylase
+- Phage antitermination protein Q
+- Phage protein NinH
+- Phage recombination protein NinG
+- Gifsy-2 prophage protein
+- DNA primase, phage associated
+- Putative ATP-dependent helicase
+
+stxA, stxB are flanked on the 3'-end by:
+- ORF B78
+- Phage head completion protein
+- Phage holin/antiholin component S
+- Phage lysozyme R
+- Phage antirepressor protein
+- Phage endopeptidaze Rz
 
 ### Antibiotic resistance detection
 #### E.coli X
