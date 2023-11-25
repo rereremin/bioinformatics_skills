@@ -25,7 +25,7 @@ Number of reads in each file:
 - in SRR292862_R1.fastq.gz **5102041** reads
 - in SRR292862_R2.fastq.gz **5102041** reads
 
-### K-mer profile and genome size estimation (ПЕРЕСЧИТАТЬ)
+### K-mer profile and genome size estimation
 
 Install jellyfish:
 ```bash
