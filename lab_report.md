@@ -16,3 +16,12 @@ Total number of proteins: 16435.
 
 ### Physical localization
 Using classic BLAST+
+Firstly, install blast in our venv `project4`:
+```bash
+conda install -c bioconda blast
+```
+Than make blast-database and perform the search:
+```bash
+makeblastdb -in peptides.fa -dbtype prot -out peptide_database
+blastp -db peptide_database -query augustus.whole.aa -outfmt 6 -out blast_res
+```
