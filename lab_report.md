@@ -15,7 +15,8 @@ grep -c "# start gene" augustus.whole.gff
 Total number of proteins: 16435.
 
 ### Physical localization
-Using classic BLAST+
+Using classic BLAST+.
+
 Firstly, install blast in our venv `project4`:
 ```bash
 conda install -c bioconda blast
@@ -24,6 +25,12 @@ Than make blast-database and perform the search:
 ```bash
 makeblastdb -in augustus.whole.aa -dbtype prot -out blast_database   
 blastp -db blast_database -query peptides.fa -outfmt 6 -out blast_res 
+```
+Make file with extracted proteins:
+```bash
+cat blast_res | awk '{FS="\t";OFS="\t"} {print $2}' | sort | uniq > peptide.sseqid.txt
+# 34 uniq proteins
+seqtk subseq augustus.whole.aa peptide.sseqid.txt > ext.proteins.fasta
 ```
 
 ### Localization prediction
