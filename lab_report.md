@@ -24,6 +24,9 @@ Than make blast-database and perform the search:
 ```bash
 makeblastdb -in peptides.fa -dbtype prot -out peptide_database
 blastp -db peptide_database -query augustus.whole.aa -outfmt 6 -out blast_res
+
+makeblastdb -in augustus.whole.aa -dbtype prot -out blast_database   
+blastp -db blast_database -query peptides.fa -outfmt 6 -out blast_res 
 ```
 
 ### Localization prediction
