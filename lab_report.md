@@ -32,5 +32,28 @@ cat blast_res | awk '{FS="\t";OFS="\t"} {print $2}' | sort | uniq > peptide.sseq
 # 34 uniq proteins
 seqtk subseq augustus.whole.aa peptide.sseqid.txt > ext.proteins.fasta
 ```
+`ext.proteins.fasta` includes 34 unique proteins.
 
 ### Localization prediction
+Using TargretP we find *other* category of proteins. List of *other* proteins:
+- g10513.t1
+- g10514.t1
+- g11513.t1
+- g11806.t1
+- g11960.t1
+- g12510.t1
+- g14472.t1
+- g15484.t1
+- g16318.t1
+- g16368.t1
+- g2203.t1
+- g3428.t1
+- g4106.t1
+- g4970.t1
+- g5237.t1
+- g5443.t1
+- g5510.t1
+- g5927.t1
+- g7861.t1
+- g8100.t1
+- g8312.t1
