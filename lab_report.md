@@ -197,4 +197,4 @@ seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
 
   AltName: Full=Vacuolar morphogenesis protein 2 [Saccharomyces cerevisiae S288C]
 
-  Other blast results [here]()
+  Other blast results [here](https://github.com/rereremin/IB/tree/project4/blast_res)
