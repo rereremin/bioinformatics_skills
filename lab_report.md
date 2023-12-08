@@ -204,4 +204,6 @@ seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
   Other blast results [here](https://github.com/rereremin/IB/tree/project4/resluts).
 
   **g14472.t1** is Ramazzottius varieornatus's protein.
-  
+
+  ### Pfarm prediction results [here](https://www.ebi.ac.uk/Tools/hmmer/results/CFAF4E4E-95AE-11EE-AEC0-D6DBD2021FDD/score).
+
