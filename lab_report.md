@@ -57,6 +57,7 @@ Using TargretP we find *other* category of proteins. List with 21 *other* protei
 - g7861.t1
 - g8100.t1
 - g8312.t1
+  
 Than use WoLF and get localization of proteins.
 
 More informative results [here](https://github.com/rereremin/IB/tree/project4/resluts)
