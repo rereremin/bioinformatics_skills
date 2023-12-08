@@ -35,41 +35,11 @@ seqtk subseq augustus.whole.aa peptide.sseqid.txt > ext.proteins.fasta
 `ext.proteins.fasta` includes 34 unique proteins.
 
 ### Localization prediction
-Using TargretP we find *other* category of proteins. List with 21 *other* protein:
-- g10513.t1
-- g10514.t1
-- g11513.t1
-- g11806.t1
-- g11960.t1
-- g12510.t1
-- g14472.t1
-- g15484.t1
-- g16318.t1
-- g16368.t1
-- g2203.t1
-- g3428.t1
-- g4106.t1
-- g4970.t1
-- g5237.t1
-- g5443.t1
-- g5510.t1
-- g5927.t1
-- g7861.t1
-- g8100.t1
-- g8312.t1
+Using TargretP we find *other* and *SP* proteins. TargeP results [here](https://github.com/rereremin/IB/tree/project4/resluts).
   
-Than use WoLF and get localization of proteins.
-
-More informative results [here](https://github.com/rereremin/IB/tree/project4/resluts)
-
-Firstly make `cur.proteins.sseqid.txt` with list of proteins. Than make fasta with these proteins:
-```bash
-seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
-```
+Than use WoLF and get localization of proteins. WoLF results [here](https://github.com/rereremin/IB/tree/project4/resluts).
 
 ### BLAST search
-- g10513.t1 (No significant similarity found)
-- g10514.t1 (No significant similarity found)
 - **g11513.t1**
 
   Q96Q05.2, 4e-81,	27.04%, 76%
@@ -80,7 +50,6 @@ seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
 
   AltName: Full=Tularik gene 1 protein [Homo sapiens]
 
-- g11806.t1 (No significant similarity found)
 - **g11960.t1**
 
   Q5DTM8.2, 2e-82, 26.42%, 98%
@@ -91,7 +60,6 @@ seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
 
   AltName: Full=RING-type E3 ubiquitin transferase BRE1A [Mus musculus]
 
-- g12510.t1 (No significant similarity found)
 - **g14472.t1**
 
   P0DOW4.1, 0.0, 100.00%, 100%
@@ -105,9 +73,7 @@ seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
   RecName: Full=Vacuolar protein sorting-associated protein 51 homolog;
 
   AltName: Full=Protein fat-free [Danio rerio]
-
-- g16318.t1 (No significant similarity found)
-- g16368.t1 (No significant similarity found)
+  
 - **g2203.t1**
   
   Q69ZQ1.2, 2e-126, 35.93%, 75%
@@ -135,7 +101,6 @@ seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
 
   AltName: Full=Myosin regulatory light chain 2, skeletal muscle isoform [Gallus gallus]
   
-- g4106.t1 (No significant similarity found)
 - **g4970.t1**
 
   Q9Y5Q5.2, 2e-11, 22.96%, 65%
@@ -160,9 +125,6 @@ seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
 
   Contains: RecName: Full=Atrial natriuretic peptide-converting enzyme, 100 kDa soluble fragment [Homo sapiens]
 
-- g5237.t1 (No significant similarity found)
-- g5443.t1 (No significant similarity found)
-- g5510.t1 (No significant similarity found)
 - **g5927.t1**
   
   Q9VAI0.1, 3e-17, 33.95%, 17%
