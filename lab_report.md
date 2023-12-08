@@ -40,7 +40,7 @@ Using TargretP we find *other* and *SP* proteins. TargeP results [here](https://
 Than use WoLF and get localization of proteins. WoLF results [here](https://github.com/rereremin/IB/tree/project4/resluts).
 
 ### BLAST search
-For each protein characteristics in format: accession, e-value, per. ident, per. query coverage and large annotation. 
+For each protein characteristics in format: accession, e-value, per. ident, per. query coverage and annotation. 
 
 - **g11513.t1**
 
