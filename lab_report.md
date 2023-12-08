@@ -35,7 +35,7 @@ seqtk subseq augustus.whole.aa peptide.sseqid.txt > ext.proteins.fasta
 `ext.proteins.fasta` includes 34 unique proteins.
 
 ### Localization prediction
-Using TargretP we find *other* category of proteins. List of *other* proteins:
+Using TargretP we find *other* category of proteins. List with 21 *other* protein:
 - g10513.t1
 - g10514.t1
 - g11513.t1
