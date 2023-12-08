@@ -57,6 +57,9 @@ Using TargretP we find *other* category of proteins. List with 21 *other* protei
 - g7861.t1
 - g8100.t1
 - g8312.t1
+Than use WoLF and get localization of proteins.
+
+More informative results [here](https://github.com/rereremin/IB/tree/project4/resluts)
 
 Firstly make `cur.proteins.sseqid.txt` with list of proteins. Than make fasta with these proteins:
 ```bash
@@ -197,7 +200,7 @@ seqtk subseq augustus.whole.aa cur.proteins.sseqid.txt > cur.ext.proteins.fasta
 
   AltName: Full=Vacuolar morphogenesis protein 2 [Saccharomyces cerevisiae S288C]
 
-  Other blast results [here](https://github.com/rereremin/IB/tree/project4/blast_res).
+  Other blast results [here](https://github.com/rereremin/IB/tree/project4/resluts).
 
   **g14472.t1** is Ramazzottius varieornatus's protein.
   
