@@ -43,5 +43,7 @@ And files with reference genome and annoteion file from NCBI:
    cat norm-matrix-deseq2.txt | R -f ../scripts/draw-heatmap.r
    ```
    results files [there](https://github.com/rereremin/IB/tree/project6/results)
-
-6. [link](https://www.yeastgenome.org/goSlimMapper?genes=&uploadFile=genes.txt&slim_type=Yeast+GO-Slim%3A+process&submit=Submit+Form)
+6. ```bash
+   head -n 50 result.txt | cut -f 1 | cut -d "-" -f 2 > genes.txt
+   ```
+8. [GO og top 50 genes](https://www.yeastgenome.org/goSlimMapper?genes=&uploadFile=genes.txt&slim_type=Yeast+GO-Slim%3A+process&submit=Submit+Form)
