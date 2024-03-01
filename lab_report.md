@@ -15,4 +15,11 @@ And files with reference genome and annoteion file from NCBI:
   ```bash
   hisat2-build GCF_000146045.2_R64_genomic.fna genome_index
   ```
+  Run hisat2 in single-end mode (align reads on reference)
+  ```bash
+  hisat2 -p 16 -x ~/Desktop/BI/learning/bioinf_practise/project6/work/genome_index -U raw_data/SRR941816.fastq | samtools sort > SRR941816.bam
+  hisat2 -p 16 -x ~/Desktop/BI/learning/bioinf_practise/project6/work/genome_index -U raw_data/SRR941817.fastq | samtools sort > SRR941817.bam
+  hisat2 -p 16 -x ~/Desktop/BI/learning/bioinf_practise/project6/work/genome_index -U raw_data/SRR941818.fastq | samtools sort > SRR941818.bam
+  hisat2 -p 16 -x ~/Desktop/BI/learning/bioinf_practise/project6/work/genome_index -U raw_data/SRR941819.fastq | samtools sort > SRR941819.bam
+  ```
   
