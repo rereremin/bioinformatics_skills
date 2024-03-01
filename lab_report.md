@@ -38,6 +38,7 @@ And files with reference genome and annoteion file from NCBI:
   featureCounts -t gene -g ID -a GCF_000146045.2_R64_genomic.gff -o feature_counts_19 SRR941819.bam
   cat feature_counts_19 | cut -f 1,7-10 > simple_counts_19.txt
   ```
-  Results of featureCounts [there]()
+  Results of featureCounts [there](https://github.com/rereremin/IB/tree/project6/feature_counts)
+  
    
    
