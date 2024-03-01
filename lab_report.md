@@ -34,9 +34,11 @@ And files with reference genome and annoteion file from NCBI:
 4. Find differentially expressed genes with Deseq2
    Run `deseq2.r` to count metrics:
    ```bash
-   cat simple_counts_16.txt | R -f scripts/deseq2.r
-   cat simple_counts_17.txt | R -f scripts/deseq2.r
-   cat simple_counts_18.txt | R -f scripts/deseq2.r
-   cat simple_counts_19.txt | R -f scripts/deseq2.r
+   cat simple_counts_SRR.txt | R -f scripts/deseq2.r
    ```
-   
+   results files [there]()
+
+5. Draw heatmap
+   ```bash
+   cat norm-matrix-deseq2.txt | R -f ../scripts/draw-heatmap.r
+   ```
