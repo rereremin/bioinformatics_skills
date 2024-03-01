@@ -10,3 +10,9 @@
 And files with reference genome and annoteion file from NCBI:
 - Saccharomyces cerevisiae strain S288c
 - assembly R64 
+2. Aligning with HISAT2
+  Unzip files and build genome index:
+  ```bash
+  hisat2-build GCF_000146045.2_R64_genomic.fna genome_index
+  ```
+  
