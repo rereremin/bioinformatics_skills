@@ -26,19 +26,17 @@ And files with reference genome and annoteion file from NCBI:
 
 3. Quantifying with featureCounts
   ```bash
-  featureCounts -t gene -g ID -a GCF_000146045.2_R64_genomic.gff -o feature_counts_16 SRR941816.bam
-  cat feature_counts_16 | cut -f 1,7-10 > simple_counts_16.txt
-
-  featureCounts -t gene -g ID -a GCF_000146045.2_R64_genomic.gff -o feature_counts_17 SRR941817.bam
-  cat feature_counts_17 | cut -f 1,7-10 > simple_counts_17.txt
-
-  featureCounts -t gene -g ID -a GCF_000146045.2_R64_genomic.gff -o feature_counts_18 SRR941818.bam
-  cat feature_counts_18 | cut -f 1,7-10 > simple_counts_18.txt
-
-  featureCounts -t gene -g ID -a GCF_000146045.2_R64_genomic.gff -o feature_counts_19 SRR941819.bam
-  cat feature_counts_19 | cut -f 1,7-10 > simple_counts_19.txt
+  featureCounts -g gene_id -a annotation.gtf -o SRR SRR941816.bam SRR941817.bam SRR941818.bam SRR941819.bam
+  cat SRR | cut -f 1,7-10 > simple_counts_SRR.txt
   ```
   Results of featureCounts [there](https://github.com/rereremin/IB/tree/project6/feature_counts)
   
-   
+4. Find differentially expressed genes with Deseq2
+   Run `deseq2.r` to count metrics:
+   ```bash
+   cat simple_counts_16.txt | R -f scripts/deseq2.r
+   cat simple_counts_17.txt | R -f scripts/deseq2.r
+   cat simple_counts_18.txt | R -f scripts/deseq2.r
+   cat simple_counts_19.txt | R -f scripts/deseq2.r
+   ```
    
