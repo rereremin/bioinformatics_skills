@@ -9,8 +9,9 @@
 
 And files with reference genome and annoteion file from NCBI:
 - Saccharomyces cerevisiae strain S288c
-- assembly R64 
-2.Aligning with HISAT2
+- assembly R64
+  
+2. Aligning with HISAT2
   Unzip files and build genome index:
   ```bash
   hisat2-build GCF_000146045.2_R64_genomic.fna genome_index
@@ -22,4 +23,10 @@ And files with reference genome and annoteion file from NCBI:
   hisat2 -p 16 -x ~/Desktop/BI/learning/bioinf_practise/project6/work/genome_index -U raw_data/SRR941818.fastq | samtools sort > SRR941818.bam
   hisat2 -p 16 -x ~/Desktop/BI/learning/bioinf_practise/project6/work/genome_index -U raw_data/SRR941819.fastq | samtools sort > SRR941819.bam
   ```
-    
+
+3. Quantifying with featureCounts
+   Firstly, convert gff to gtf format
+   ```bash
+   gffread GCF_000146045.2_R64_genomic.gff -T -o GCF_000146045.2_R64_genomic.gtf
+   ```
+   
