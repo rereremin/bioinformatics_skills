@@ -7,6 +7,6 @@
 - [SRR941818: fermentation 30 minutes replicate 1](ftp.sra.ebi.ac.uk/vol1/fastq/SRR941/SRR941818/SRR941818.fastq.gz)
 - [SRR941819: fermentation 30 minutes replicate 2](ftp.sra.ebi.ac.uk/vol1/fastq/SRR941/SRR941819/SRR941819.fastq.gz)
 
-  And files with reference genome and annoteion file from NCBI:
-  - Saccharomyces cerevisiae strain S288c
-  - assembly R64 
+And files with reference genome and annoteion file from NCBI:
+- Saccharomyces cerevisiae strain S288c
+- assembly R64 
