@@ -29,16 +29,17 @@ And files with reference genome and annoteion file from NCBI:
   featureCounts -g gene_id -a annotation.gtf -o SRR SRR941816.bam SRR941817.bam SRR941818.bam SRR941819.bam
   cat SRR | cut -f 1,7-10 > simple_counts_SRR.txt
   ```
-  Results of featureCounts [there](https://github.com/rereremin/IB/tree/project6/feature_counts)
+  Results of featureCounts in `results/simple_counts_SRR` [there](https://github.com/rereremin/IB/tree/project6/feature_counts)
   
 4. Find differentially expressed genes with Deseq2
    Run `deseq2.r` to count metrics:
    ```bash
    cat simple_counts_SRR.txt | R -f scripts/deseq2.r
    ```
-   results files [there]()
+   results in files `norm-matrix-deseq.txt` and `result.txt`[there](https://github.com/rereremin/IB/tree/project6/results)
 
 5. Draw heatmap
    ```bash
    cat norm-matrix-deseq2.txt | R -f ../scripts/draw-heatmap.r
    ```
+   results files [there](https://github.com/rereremin/IB/tree/project6/results)
