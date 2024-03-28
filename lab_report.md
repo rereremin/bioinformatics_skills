@@ -7,7 +7,7 @@ In one of the steps, a table with information on fastq files was obtained. This 
 
 As a result of executing this script we have 4 files, which we need for [MicrobiomeAnalyst](https://www.microbiomeanalyst.ca/MicrobiomeAnalyst/ModuleView.xhtml). Results of this step [here](https://github.com/rereremin/BI/tree/project7/results) 
 
-[Taxa barplot: ]([file:///Users/nikitazherko/Downloads/taxa_alpha_2.svg](https://github.com/rereremin/BI/blob/project7/results/taxa_alpha_2.svg))
+[Taxa barplot: ](https://github.com/rereremin/BI/blob/project7/results/taxa_alpha_2.svg))
 
 ### Shotgun sequencing
 1. Shotgun sequence data profiling
@@ -15,3 +15,13 @@ As a result of executing this script we have 4 files, which we need for [Microbi
 2. Visualization of the Kraken results as a Sankey diagram
    [Results](https://github.com/rereremin/BI/blob/project7/results/sankey-SRR957742_reads.report.html)
 3. Comparison with ancient Tannerella forsythia genome
+
+   Download data for the T. forsythia (genome in fasta and annotation in gff3)
+
+   ```bash
+
+   bwa mem GCA_000238215.1_ASM23821v1_genomic.fna G12_assembly.fna.gz > alignment.sam
+   samtools view -S -b alignment.sam > alignment.bam
+   
+   samtools index alignment_sort.bam
+   ```
