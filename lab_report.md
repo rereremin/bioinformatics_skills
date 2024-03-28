@@ -13,5 +13,5 @@ As a result of executing this script we have 4 files, which we need for [Microbi
 1. Shotgun sequence data profiling
    Download report and taxonomic prediction for each sequence.
 2. Visualization of the Kraken results as a Sankey diagram
-   [Results]()
-3. 
+   [Results](https://github.com/rereremin/BI/blob/project7/results/sankey-SRR957742_reads.report.html)
+3. Comparison with ancient Tannerella forsythia genome
