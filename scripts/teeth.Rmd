@@ -1,0 +1,203 @@
+---
+title: "Dead man's teeth - 16S analysis"
+author: "Mike Rayko"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+#install.packages("rmarkdown", repos = "https://cran.revolutionanalytics.com")
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+This payline generally follows the official DADA2 tutorial 
+(https://benjjneb.github.io/dada2/tutorial_1_8.html), and you can refer to it for more details.
+
+## Loading data and running QC
+
+
+We start by loading the necessary packages, setting up a working directory and random seed (for the sake of reproducibility)
+
+```{r results='hide'}
+require(dada2)
+require(phyloseq)
+require(Biostrings)
+require(ggplot2)
+require(phyloseq)
+set.seed(139)
+setwd('./')
+```
+
+
+Next, we need to specify sample files and extract their names. The code below lists the contents of the specified folder and stores the file names as a separate vector, selecting them by suffix. The last line generates a list of samples, removing all characters except the sample number.
+We have single end reads here, otherwise we would keep track for forward and backward reads separately 
+
+```{r}
+path = "./"
+forward.raw <- sort(list.files(path, pattern='.fastq', full.names = TRUE))
+sample.names <- basename(forward.raw)
+sample.names
+```
+
+Now let's check the quality of our data. This function creates plots similar to FastQC graphs (or multiQC for aggregated data).
+
+```{r warning=FALSE}
+plotQualityProfile(forward.raw, n=50000)
+```
+
+```{r warning=FALSE}
+plotQualityProfile(forward.raw, aggregate=TRUE, n=100000)
+```
+
+## Filtering and trimming reads based on obtained plots.
+
+Now the important part. Here we need to select values for length and quality trimming. Besides the low quality, amplicon sequencing data often keeps the artificial sequences (barcodes). One possible solution is the third-party tools such as Trimmomatic or Cutadapt.
+But in this case we can just trim it by length. Based on metadata we know that the primer + adapter length is about 35 bp, and amplicon size is about 145 bp. Thus, m = 35 and n = 140 can be a reasonable choice in this case. 
+
+```{r}
+root.qc = './qc'
+forward.qc <- file.path(root.qc, paste0(sample.names, ".fastq"))
+qc.out <- filterAndTrim(forward.raw, forward.qc, trimLeft = 32,
+                        truncLen=140,  truncQ = 5, compress=TRUE, multithread=TRUE)
+qc.out
+```
+
+## Error correction 
+
+At this step we will train the error model on our data. The DADA2 algorithm uses a parametric error model, and each amplicon data set has its own set of error rates. 
+
+This step can be quite time-consuming.
+
+```{r}
+forward.err <- learnErrors(forward.qc, multithread=TRUE, MAX_CONSIST=20)
+```
+
+We can visualize the estimated error rates for each possible transition (A→C, A→G, …).Points are the observed error rates for each consensus quality score. The black line shows the estimated error rates after convergence of the machine-learning algorithm.
+
+```{r warning=FALSE}
+plotErrors(forward.err, nominalQ=TRUE)
+```
+
+## Dereplication, exraction of sequence variants
+
+Next we can run sequence dereplication on our reads. Dereplication combines all identical sequencing reads into into “unique sequences” with a corresponding “abundance” equal to the number of reads with that unique sequence. Dereplication substantially reduces computation time by eliminating redundant comparisons.
+
+```{r echo=T, results='hide', message=F, warning=FALSE}
+
+forward.derep <- derepFastq(forward.qc, n=1e7, verbose=TRUE)
+# Name the derep-class objects by the sample names
+names(forward.derep) <- sample.names
+```
+
+OK, now we are ready to infer actual sequence variants per each sample based on the error model we just trained. It's core DADA2 functionality. 
+
+```{r echo=T, results='hide', message=F, warning=FALSE}
+forward.dada <- dada(forward.derep, err=forward.err, pool=F, multithread=TRUE)
+sequence.table <- makeSequenceTable(forward.dada)
+```
+## Bimera removal
+
+A mandatory step in amplicon analysis is the removal of chimeric (or bimeric) sequences. A chimera refers to a sequence fragment that is erroneously created during the PCR amplification process by the artificial joining of two or more unrelated DNA fragments. 
+
+```{r}
+seqtab.nochim <- removeBimeraDenovo(sequence.table, method="consensus", multithread=TRUE, verbose=TRUE)
+
+dim(seqtab.nochim)
+sum(seqtab.nochim) / sum(sequence.table)
+```
+
+Let's keep track on the amount of data on every stage so far.
+
+```{r}
+getN <- function(x) sum(getUniques(x))
+track <- cbind(qc.out, sapply(forward.dada, getN), rowSums(seqtab.nochim))
+# If processing a single sample, remove the sapply calls: e.g. replace sapply(dadaFs, getN) with getN(dadaFs)
+colnames(track) <- c("input", "filtered", "denoisedF", "nonchim")
+rownames(track) <- sample.names
+track
+dir.create("results")
+write.csv(track, "results/track.csv", row.names=TRUE)
+```
+## Taxonomy assignment
+
+Here we come to the taxonomic classification of our sequences. First, we do this on the higher level through naive Bayesian classifier in dada2, then we go for assignment of species-level annotations to reads in pairs.
+
+```{r}
+taxa <- assignTaxonomy(seqtab.nochim, "../silva_nr_v132_train_set.fa.gz", multithread=TRUE, tryRC=TRUE)
+taxa_sp <- addSpecies(taxa, "../silva_species_assignment_v132.fa.gz", tryRC=TRUE)
+```
+
+
+## Phyloseq and beyond
+
+Now we can turn our data into a phyloseq object. We can then do almost any analysis with it that this ecosystem allows, from exploratory analysis to hypothesis testing. If you're pretty good at R, this might be your choice (https://joey711.github.io/phyloseq/).
+
+But first, we need to prepare and add metadata
+
+``` {r}
+metadata <- read.table(file = "sample-metadata.tsv", comment.char = "", header = TRUE, sep = "\t")
+manifest <- read.table(file = "manifest.tsv",  header = TRUE, sep = "\t")
+
+# Remove first 5 characters from the second column of the first table
+manifest$absolute.filepath <- substring(manifest$absolute.filepath, 6)
+
+# Merge tables by the first columns
+merged_table <- merge(manifest, metadata, by.x = "sample.id", by.y = "X.SampleID")
+
+# Reorder columns in the resulting table
+resulting_table <- merged_table[, c(2, 1, 3:7)]
+rownames(resulting_table) <- merged_table$absolute.filepath
+resulting_table <- resulting_table[, -1] 
+```
+
+And then - actual phyloseq object.
+
+```{r} 
+ps <- phyloseq(otu_table(seqtab.nochim, taxa_are_rows=FALSE), 
+               sample_data(resulting_table), 
+               tax_table(taxa))
+```
+
+It is more convenient to use short names for our ASVs (e.g. ASV21) rather than the full DNA sequence when working with some of the tables and visualizations from phyloseq, but we want to keep the full DNA sequences for other purposes like merging with other datasets or indexing into reference databases like the Earth Microbiome Project. For that reason we’ll store the DNA sequences of our ASVs in the refseq slot of the phyloseq object, and then rename our taxa to a short string. That way, the short new taxa names will appear in tables and plots, and we can still recover the DNA sequences corresponding to each ASV as needed with refseq(ps).
+
+```{r}
+dna <- Biostrings::DNAStringSet(taxa_names(ps))
+names(dna) <- taxa_names(ps)
+ps <- merge_phyloseq(ps, dna)
+taxa_names(ps) <- paste0("ASV", seq(ntaxa(ps)))
+ps
+```
+
+
+
+## Extract data to MA
+
+As a recommended alternative, I suggest you to play with the obtained data in the online version of MicrobiomeAnalyst (https://www.microbiomeanalyst.ca/). This requires exporting the data to ASV table, taxonomy file and metadata:
+
+```{r}
+
+dir.create("MicrobiomeAnalyst_data")
+# For the representative sequences:
+df_refseq <- as.data.frame(refseq(ps))
+df_refseq <- tibble::rownames_to_column(df_refseq, var = "#NAME")
+write.table(df_refseq, "MicrobiomeAnalyst_data/rep_seqs.csv", row.names=FALSE, col.names=FALSE)
+
+# For the ASV table:
+df_asv_table <- as.data.frame(t(otu_table(ps)))
+df_asv_table <- tibble::rownames_to_column(df_asv_table, var = "#NAME")
+write.csv(df_asv_table, "MicrobiomeAnalyst_data/asv_table.csv", row.names=FALSE)
+
+# For the taxonomy table:
+df_tax_table <- as.data.frame(tax_table(ps))
+df_tax_table <- tibble::rownames_to_column(df_tax_table, var = "#TAXONOMY")
+write.csv(df_tax_table, "MicrobiomeAnalyst_data/tax_table.csv", row.names=FALSE)
+
+# For the metadata:
+resulting_table <- tibble::rownames_to_column(resulting_table, var = "#NAME")
+write.csv(resulting_table, "MicrobiomeAnalyst_data/metadata.csv", row.names=FALSE)
+
+```
+
+
+That's it. Then, using the MA, you can analyse your results - taxonomic composition, diversity etc. 
