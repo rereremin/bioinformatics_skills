@@ -22,6 +22,7 @@ As a result of executing this script we have 4 files, which we need for [Microbi
    bwa index GCA_000238215.1_ASM23821v1_genomic.fna
    bwa mem GCA_000238215.1_ASM23821v1_genomic.fna G12_assembly.fna.gz > alignment.sam
    samtools view -S -b alignment.sam > alignment.bam
-   
+   samtools sort alignment.bam -o alignment_sorted.bam
    samtools index alignment_sort.bam
    ```
+   Then visualized with IGV.
