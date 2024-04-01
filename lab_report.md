@@ -26,3 +26,15 @@ As a result of executing this script we have 4 files, which we need for [Microbi
    samtools index alignment_sort.bam
    ```
    Then visualized with IGV.
+ 
+4. The alignment bed file and the annotation gff file were substracted to reveal only regions present in the modern strain. 
+
+   ```bash
+   intersectBed -v -a sequence.gff3 -b alignment.bed > result_intersect.gff
+   ```
+The resulting file was parsed to get gene IDS for further annotation. 
+
+   ```bash
+   awk -F';' '{split($2, a, ":"); print a[2]}' result_intersect.gff.txt > gene_ids.txt 
+   ```
+A hand-made python  `genes_annotation.py` script was used to annotate the genes. The output of the script was a `gene_annotation.csv` file. 
